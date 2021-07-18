@@ -9,15 +9,12 @@ namespace ClassLibrary.Interfaces
 {
     public interface IPlayer
     {
+        int Id { get; set; }
         string Name { get; set; }
         string userGuess { get; set; }
         int Turns { get; set; }
         int Hints { get; set; }
         Status status { get; set; }
-
-        IDictionary<string, dynamic> PlayerDetails { get; set; }
-
-        IDictionary<string, dynamic> addPlayerDetails(Status status);
-        IDictionary<string, dynamic> updatePlayerDetails(int Turns, int Hints, Status status);
+        Guid guid { get; set; }
     }
 }

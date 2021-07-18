@@ -1,2 +1,2 @@
-# randomNumberGameAPI
+# RandomNumberGame
  

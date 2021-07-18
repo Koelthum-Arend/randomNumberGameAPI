@@ -10,6 +10,7 @@ namespace ClassLibrary
 {
     public class Hints : IHints
     {
+        //used for checking primality of number
         public int checkDivisibitlyRange(int code)
         {
             int count = 0;

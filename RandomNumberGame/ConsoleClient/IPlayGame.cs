@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClassLibrary.GameDTO;
+using ClassLibrary.Interfaces;
 
 namespace ConsoleClient
 {
     public interface IPlayGame
     {
         GameInfoDTO StartNewGame();
-        void RunGame();
+        IPlayer RunGame();
         string Help();
     }
 }

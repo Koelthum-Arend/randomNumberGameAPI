@@ -18,15 +18,17 @@ namespace ConsoleClient
         private IValidate _validate { get; set; }
         private GameInfoDTO _gameInfo { get; set; }
         private IGenerateCode _code { get; set; }
-        public PlayGame()
+
+        public PlayGame(IPlayer Player, IHints Hints, IValidate Validate, IGenerateCode generateCode)
         {
-            _player = new Player();
-            _hints = new Hints();
-            _validate = new Validate();
-            _code = new GenerateCode();
-            _gameInfo = new GameInfoDTO(_code);
-    }
-        public void RunGame()
+            _player = Player;
+            _hints = Hints;
+            _validate = Validate;
+            _code = generateCode;
+            _gameInfo = new GameInfoDTO(generateCode);
+        }
+
+        public IPlayer RunGame()
         {
             while (_player.Turns >= 0)
             {
@@ -34,7 +36,9 @@ namespace ConsoleClient
                 {
                     Console.WriteLine("Welcome to Guess the mystery Code Game\nA mystery code has been generated and you have 5 turns to guess it!\nYou have 2 hints, good luck! ");
                     Console.WriteLine("Name: ");
+                   //_player.guid = Guid.NewGuid();
                    _player.Name = Console.ReadLine();
+
                 }
 
                 Console.WriteLine("Crack the code: ");
@@ -45,7 +49,7 @@ namespace ConsoleClient
 
                 if (_player.userGuess.Equals("quit"))
                 {
-                    Console.WriteLine($"Bye-Bye {char.ToUpper(_player.Name[0]) + _player.Name.Substring(1)}, better luck next time!\nThe mystery code was: {_gameInfo.GeneratedCode}");
+                    Console.WriteLine($"Bye-Bye {char.ToUpper(_player.Name[0]) + _player.Name.Substring(1)}, better luck next time!\nThe mystery code was: {_gameInfo._generatedCode}");
                     _player.status = Status.QUIT;
                     break;
                 }
@@ -58,13 +62,13 @@ namespace ConsoleClient
 
                 else if (_player.Turns == 0)
                 {
-                    Console.WriteLine($"Sorry {_player.Name}, you're all out of turns :(.\nThe mystery code was: {_gameInfo.GeneratedCode}\nBetter luck next time");
+                    Console.WriteLine($"Sorry {_player.Name}, you're all out of turns :(.\nThe mystery code was: {_gameInfo._generatedCode}\nBetter luck next time");
                 }
 
                 else if (_player.userGuess.Equals("hint"))
                 {
                     _player.status = Status.HINT;
-                    var divisibilityRange = _hints.checkDivisibitlyRange(_gameInfo.GeneratedCode);
+                    var divisibilityRange = _hints.checkDivisibitlyRange(_gameInfo._generatedCode);
                     switch (_player.Hints)
                     {
                         case 2:
@@ -79,11 +83,11 @@ namespace ConsoleClient
                             {
                                 Console.WriteLine("The mystery code is not a prime number.");
                             }
-
+                            //testing
                             break;
 
                         case 1:
-                            var parity = _hints.checkParity(_gameInfo.GeneratedCode);
+                            var parity = _hints.checkParity(_gameInfo._generatedCode);
 
                             if (parity.Equals(Response.EVEN))
                             {
@@ -106,11 +110,11 @@ namespace ConsoleClient
 
                 else if (IsDigit == true)
                 {
-                    var status = _validate.ExecuteValidation(_player.userGuess, _gameInfo.GeneratedCode);
+                    var status = _validate.ExecuteValidation(_player.userGuess, _gameInfo._generatedCode);
                     switch (status)
                     {
                         case Status.CORRECT:
-                            Console.WriteLine($"Congratulations {_player.Name}, you've cracked the code!\nThe mystery code was: {_gameInfo.GeneratedCode}");
+                            Console.WriteLine($"Congratulations {_player.Name}, you've cracked the code!\nThe mystery code was: {_gameInfo._generatedCode}");
                             _player.status = Status.CORRECT;
                             break;
 
@@ -134,6 +138,7 @@ namespace ConsoleClient
                 }
                 _player.Turns -= 1;
             }
+            return _player;
         }
 
         public GameInfoDTO StartNewGame()
@@ -143,7 +148,7 @@ namespace ConsoleClient
 
         public string Help()
         {
-            return "~~RANDOM NUMBER GAME~~";
+            return "~~RANDOM NUMBER GAME~~\nGuess the mystery code between the range 0-100\nYou have: \n- 5 Turns \n- 2 Hints\nGood Luck!";
         }
     }
 }

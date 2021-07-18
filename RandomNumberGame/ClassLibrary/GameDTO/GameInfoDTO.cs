@@ -9,15 +9,15 @@ namespace ClassLibrary.GameDTO
 {
     public class GameInfoDTO
     {
-        public int GeneratedCode { get; set; }
-        public int MinRange { get; set; }
-        public int MaxRange { get; set; }
+        public int _generatedCode { get; set; }
+        public int _minRange { get; set; }
+        public int _maxRange { get; set; }
 
         public GameInfoDTO(IGenerateCode code)
         {
-            MinRange = 0;
-            MaxRange = 100;
-            GeneratedCode = code.CreateCode(MinRange,MaxRange);
+            _minRange = 0;
+            _maxRange = 100;
+            _generatedCode = code.CreateCode(_minRange,_maxRange);
         }
     }
 }
