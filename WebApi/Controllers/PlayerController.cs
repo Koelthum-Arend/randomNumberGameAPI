@@ -20,16 +20,13 @@ namespace WebApi.Controllers
         {
             _dbContext = context;
         }
-        //c:\users\koelta01\documents\github\randomnumbergame\WebApi\Controllers\PlayerController.cs
 
-        // api/Player/info
         [HttpGet("info")]
         public IList<Player> Get()
         {
+            // What to return?
             return (this._dbContext.Players.ToList());
         }
-
-       
 
         [HttpDelete]
         public IList<Player> Delete(int primaryKey)
@@ -43,6 +40,7 @@ namespace WebApi.Controllers
             this._dbContext.Players.Remove(p);
             this._dbContext.SaveChangesAsync();
 
+            // What to return?
             return (this._dbContext.Players.ToList());
         }
 
@@ -55,35 +53,31 @@ namespace WebApi.Controllers
             await this._dbContext.Players.AddAsync(player);
             await this._dbContext.SaveChangesAsync();
 
+            // What to return?
             return _dbContext.Players.ToList();
-
         }
 
         [HttpPost]
-        public async Task<IList<Player>> UpdatePlayerInfo(int name)
+        public async Task<IList<Player>> UpdatePlayerInfo(string name)
         {
-            var p = this._dbContext.Players.Find(name);
-            //query database for row to be updated
-            var query =
-                from item in _dbContext.Players
-                where item.Name.Equals(name)
-                select item;
 
-            foreach (Player item in query)
+            // Retrieve entity by name
+            var entity = _dbContext.Players.FirstOrDefault(item => item.Name == name);
+
+            // Validate entity is not null
+            if (entity != null)
             {
-                item.Hints -= 1;
-                item.Turns -= 1;
+                // Make changes on entity
+                entity.Name = "BITCHPLZ2";
+
+                // Update entity in DbSet
+                this._dbContext.Players.Update(entity);
+
+                // Save changes in database
+                await this._dbContext.SaveChangesAsync();
             }
 
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            // What to return?
             return _dbContext.Players.ToList();
         }
     }
