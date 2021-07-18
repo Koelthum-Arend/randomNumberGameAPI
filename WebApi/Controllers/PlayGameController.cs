@@ -42,6 +42,51 @@ namespace WebApi.Controllers
             return null;
         }
 
+        [HttpGet("hints")]
+        public string GetHints()
+        {
+                var divisibilityRange = _hints.checkDivisibitlyRange(_gameInfo._generatedCode);
+                switch (_player.Hints)
+                {
+                    case 2:
+                        var primality = _hints.IsPrime(divisibilityRange);
+
+                        if (primality.Equals(Response.PRIME))
+                        {
+                            Console.WriteLine("The mystery code is a prime number.");
+                        }
+
+                        else if (primality.Equals(Response.NOT_PRIME))
+                        {
+                            Console.WriteLine("The mystery code is not a prime number.");
+                        }
+                        //testing
+                        break;
+
+                    case 1:
+                        var parity = _hints.checkParity(_gameInfo._generatedCode);
+
+                        if (parity.Equals(Response.EVEN))
+                        {
+                            Console.WriteLine("The mystery code is an even number");
+                        }
+
+                        else if (parity.Equals(Response.ODD))
+                        {
+                            Console.WriteLine("The mystery code is an odd number");
+                        }
+
+                        break;
+
+                    case 0:
+                        Console.WriteLine("Sorry, you're all out of hints");
+                        break;
+                }
+                _player.Hints -= 1;
+
+                return default;
+        }
+
         [HttpDelete]
         public IList<Player> Delete(int primaryKey)
         {
